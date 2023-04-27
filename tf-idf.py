@@ -34,10 +34,13 @@ for i, desc in enumerate(df["clean_description"]):
 
 # Define the recommendation function
 def recommend_games(game_name, n=10):
+    if game_name not in df["name"].values:
+        return "Invalid game name"
     game_index = df[df["name"] == game_name].index[0]
     scores = tf_idf_matrix.dot(tf_idf_matrix[game_index])
     top_indices = scores.argsort()[::-1][1:n+1]
     return list(df.iloc[top_indices]["name"])
 
 # Example usage
-print(recommend_games("Portal", n=5))
+game = input("\nEnter the game name: ")
+print(recommend_games(game, n=5))

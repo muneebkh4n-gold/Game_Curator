@@ -20,6 +20,11 @@ def recommend_games(user_id):
     """
     Recommends games for the given user_id
     """
+    # Check if the user ID exists in the pivot table
+    if user_id not in steam_pivot.index:
+        print(f"User {user_id} not found in the Steam dataset.")
+        exit(1)
+
     # Find all the games the user has played
     user_games = steam_pivot.loc[user_id].dropna().index
 
@@ -42,5 +47,6 @@ def recommend_games(user_id):
     return recommendations
 
 # Test the recommendation system
-recommendations = recommend_games(59945701)
+id = input("\nENTER THE USER ID: ")
+recommendations = recommend_games(id)
 print(recommendations.head(10))

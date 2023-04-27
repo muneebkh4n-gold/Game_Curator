@@ -18,6 +18,10 @@ for title1 in steam_data['game_title'].unique():
             similarity_dict[(title1, title2)] = jaccard_similarity(title1, title2)
 
 def recommend_games(user_id):
+    if user_id not in steam_data['user_id'].unique():
+        print(f"User ID {user_id} not found in dataset.")
+        exit(1)
+
     user_data = steam_data[steam_data['user_id'] == user_id]
     user_games = set(user_data['game_title'].unique())
 
@@ -34,5 +38,5 @@ def recommend_games(user_id):
 
     return sorted(scores.items(), key=lambda x: x[1], reverse=True)[:10]
 
-
-print(recommend_games(59945701))
+id = input("\nENTER THE USER ID: ")
+print(recommend_games(id))
