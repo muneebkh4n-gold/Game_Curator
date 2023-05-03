@@ -39,4 +39,4 @@ def recommend_games(user_id):
     return sorted(scores.items(), key=lambda x: x[1], reverse=True)[:10]
 
 id = input("\nENTER THE USER ID: ")
-print(recommend_games(id))
+print(recommend_games(int(id)))

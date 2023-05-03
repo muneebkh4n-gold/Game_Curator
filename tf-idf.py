@@ -3,27 +3,24 @@ import numpy as np
 import re
 from collections import Counter
 
-# Load the dataset
 df = pd.read_csv("steam_games.csv", nrows=100)
 
-# Preprocessing
 def preprocess(text):
-    text = text.lower()  # Convert to lowercase
-    text = re.sub(r"[^a-z0-9]+", " ", text)  # Remove non-alphanumeric characters
-    text = re.sub(r"\s+", " ", text).strip()  # Remove extra whitespaces
+    text = text.lower() 
+    text = re.sub(r"[^a-z0-9]+", " ", text) 
+    text = re.sub(r"\s+", " ", text).strip()  
     return text
 
 df["clean_description"] = df["desc_snippet"].fillna("") + " " + df["game_description"].fillna("")
 df["clean_description"] = df["clean_description"].apply(preprocess)
 
-# Compute the document frequencies
+
 doc_freqs = Counter()
 for desc in df["clean_description"]:
     words = set(desc.split())
     for word in words:
         doc_freqs[word] += 1
 
-# Compute the tf-idf matrix
 tf_idf_matrix = np.zeros((len(df), len(doc_freqs)))
 for i, desc in enumerate(df["clean_description"]):
     word_counts = Counter(desc.split())
@@ -32,7 +29,6 @@ for i, desc in enumerate(df["clean_description"]):
         idf = np.log(len(df) / doc_freqs[word])
         tf_idf_matrix[i, j] = tf * idf
 
-# Define the recommendation function
 def recommend_games(game_name, n=10):
     if game_name not in df["name"].values:
         return "Invalid game name"
@@ -41,6 +37,6 @@ def recommend_games(game_name, n=10):
     top_indices = scores.argsort()[::-1][1:n+1]
     return list(df.iloc[top_indices]["name"])
 
-# Example usage
+
 game = input("\nEnter the game name: ")
-print(recommend_games(game, n=5))
+print(recommend_games(str(game), n=5))
